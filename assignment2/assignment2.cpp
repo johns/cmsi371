@@ -1,11 +1,11 @@
 /***
  Assignment-2: Geometric Modeling of a Scene
- 
+
  Name: Scott, John
- 
+
  Collaborators (talked with about high-level concepts): Chami, Sam
 
- Project Summary: Implemented matrix multiplication by having a matrix, A, of size 4x4 multiples by a matrix, B, of size 4x4 or 24x4. Used matrix multiplication to build cubes and manipulate it into different rectangular shapes. Added color values to a vertex then converted to an array to add color to rectangular shapes. Formed a scene of a room with a rug, two chairs, a table, and a couch.
+ Project Summary: Implemented matrix multiplication by having a matrix, A, of size 4x4 multiples by a matrix, B, of size 4x4 or 24x4. Used matrix multiplication to build cubes and manipulate it into different rectangular shapes. Added color values to a vertex then converted to an array to add color to rectangular shapes. Formed a scene of a room with a rug, two chairs, a table, and a couch. Ran and compiled in Xcode.
  ***/
 
 
@@ -147,21 +147,21 @@ vector<GLfloat> mat_mult(vector<GLfloat> A, vector<GLfloat> B) {
 // Builds a unit cube centered at the origin
 vector<GLfloat> build_cube() {
     vector<GLfloat> result;
-    
+
     vector<GLfloat> A1 = to_cartesian_coord(mat_mult(translation_matrix(0.0, 0.0, 0.5), to_homogenous_coord(init_plane())));
     vector<GLfloat> A2 = to_cartesian_coord(mat_mult(translation_matrix(0.0, 0.0, -0.5), mat_mult(rotation_matrix_y(M_PI), to_homogenous_coord(init_plane()))));
     vector<GLfloat> A3 = to_cartesian_coord(mat_mult(translation_matrix(0.5, 0.0, 0.0), mat_mult(rotation_matrix_y(M_PI/2.0), to_homogenous_coord(init_plane()))));
     vector<GLfloat> A4 = to_cartesian_coord(mat_mult(translation_matrix(-0.5, 0.0, 0.0), mat_mult(rotation_matrix_y(-M_PI/2.0), to_homogenous_coord(init_plane()))));
     vector<GLfloat> A5 = to_cartesian_coord(mat_mult(translation_matrix(0.0, -0.5, 0.0), mat_mult(rotation_matrix_x(-M_PI/2.0), to_homogenous_coord(init_plane()))));
     vector<GLfloat> A6 = to_cartesian_coord(mat_mult(translation_matrix(0.0, 0.5, 0.0), mat_mult(rotation_matrix_x(M_PI/2.0), to_homogenous_coord(init_plane()))));
-    
+
     result.insert(result.end(), A1.begin(), A1.end());
     result.insert(result.end(), A2.begin(), A2.end());
     result.insert(result.end(), A3.begin(), A3.end());
     result.insert(result.end(), A4.begin(), A4.end());
     result.insert(result.end(), A5.begin(), A5.end());
     result.insert(result.end(), A6.begin(), A6.end());
-    
+
     return result;
 }
 
@@ -206,8 +206,8 @@ void init_camera() {
 GLfloat* init_scene() {
     vector<GLfloat> scene;
     vector<GLfloat> hCube = to_homogenous_coord(build_cube());
-    
-    
+
+
     // Table
     vector<GLfloat> tableTop = to_cartesian_coord(mat_mult(scaling_matrix(4.0, 1.0, 2.0), hCube));
     vector<GLfloat> tableBase = to_cartesian_coord(mat_mult(translation_matrix(0.0, -0.5, 0.0), mat_mult(scaling_matrix(4.1, 0.1, 2.1), hCube)));
@@ -215,25 +215,25 @@ GLfloat* init_scene() {
     vector<GLfloat> tableLegFR = to_cartesian_coord(mat_mult(translation_matrix(-2.0, -1.0, 1.0), mat_mult(scaling_matrix(0.1, 1.1, 0.1), hCube)));
     vector<GLfloat> tableLegBL = to_cartesian_coord(mat_mult(translation_matrix(2.0, -1.0, -1.0), mat_mult(scaling_matrix(0.1, 1.1, 0.1), hCube)));
     vector<GLfloat> tableLegBR = to_cartesian_coord(mat_mult(translation_matrix(-2.0, -1.0, -1.0), mat_mult(scaling_matrix(0.1, 1.1, 0.1), hCube)));
-    
+
     scene.insert(scene.end(), tableTop.begin(), tableTop.end());
     scene.insert(scene.end(), tableBase.begin(), tableBase.end());
     scene.insert(scene.end(), tableLegFL.begin(), tableLegFL.end());
     scene.insert(scene.end(), tableLegFR.begin(), tableLegFR.end());
     scene.insert(scene.end(), tableLegBL.begin(), tableLegBL.end());
     scene.insert(scene.end(), tableLegBR.begin(), tableLegBR.end());
-    
+
     elements = tableTop.size() + tableBase.size() + tableLegFL.size() + tableLegFR.size() + tableLegBL.size() + tableLegBR.size();
-    
-    
+
+
     // Rug
     vector<GLfloat> rug = to_cartesian_coord(mat_mult(translation_matrix(0.0, -1.5, 0.0), mat_mult(scaling_matrix(15.0, 0.1, 15.0), hCube)));
-    
+
     scene.insert(scene.end(), rug.begin(), rug.end());
-    
+
     elements += rug.size();
-    
-    
+
+
     // Right Chair
     vector<GLfloat> chairRBase = to_cartesian_coord(mat_mult(translation_matrix(5.75, 0.0, 0.0), mat_mult(scaling_matrix(3.5, 1.0, 3.0), hCube)));
     vector<GLfloat> chairRBack = to_cartesian_coord(mat_mult(translation_matrix(7.2, 1.0, 0.0), mat_mult(rotation_matrix_z(M_PI*3.6/8.0), mat_mult(scaling_matrix(2.5, 1.0, 3.0), hCube))));
@@ -243,7 +243,7 @@ GLfloat* init_scene() {
     vector<GLfloat> chairRLegFR = to_cartesian_coord(mat_mult(translation_matrix(4.5, -1.0, -1.25), mat_mult(scaling_matrix(0.2, 1.0, 0.2), hCube)));
     vector<GLfloat> chairRLegBL = to_cartesian_coord(mat_mult(translation_matrix(7.25, -1.0, 1.25), mat_mult(scaling_matrix(0.2, 1.0, 0.2), hCube)));
     vector<GLfloat> chairRLegBR = to_cartesian_coord(mat_mult(translation_matrix(7.25, -1.0, -1.25), mat_mult(scaling_matrix(0.2, 1.0, 0.2), hCube)));
-    
+
     scene.insert(scene.end(), chairRBase.begin(), chairRBase.end());
     scene.insert(scene.end(), chairRBack.begin(), chairRBack.end());
     scene.insert(scene.end(), chairRArmL.begin(), chairRArmL.end());
@@ -252,10 +252,10 @@ GLfloat* init_scene() {
     scene.insert(scene.end(), chairRLegFR.begin(), chairRLegFR.end());
     scene.insert(scene.end(), chairRLegBL.begin(), chairRLegBL.end());
     scene.insert(scene.end(), chairRLegBR.begin(), chairRLegBR.end());
-    
+
     elements += chairRBase.size() + chairRBack.size() + chairRArmL.size() + chairRArmR.size() + chairRLegFL.size() + chairRLegFR.size() + chairRLegBL.size() + chairRLegBR.size();
-    
-    
+
+
     // Left Chair
     vector<GLfloat> chairLBase = to_cartesian_coord(mat_mult(rotation_matrix_y(M_PI), to_homogenous_coord(chairRBase)));
     vector<GLfloat> chairLBack = to_cartesian_coord(mat_mult(rotation_matrix_y(M_PI), to_homogenous_coord(chairRBack)));
@@ -265,7 +265,7 @@ GLfloat* init_scene() {
     vector<GLfloat> chairLLegFR = to_cartesian_coord(mat_mult(rotation_matrix_y(M_PI), to_homogenous_coord(chairRLegFR)));
     vector<GLfloat> chairLLegBL = to_cartesian_coord(mat_mult(rotation_matrix_y(M_PI), to_homogenous_coord(chairRLegBL)));
     vector<GLfloat> chairLLegBR = to_cartesian_coord(mat_mult(rotation_matrix_y(M_PI), to_homogenous_coord(chairRLegBR)));
-    
+
     scene.insert(scene.end(), chairLBase.begin(), chairLBase.end());
     scene.insert(scene.end(), chairLBack.begin(), chairLBack.end());
     scene.insert(scene.end(), chairLArmL.begin(), chairLArmL.end());
@@ -274,10 +274,10 @@ GLfloat* init_scene() {
     scene.insert(scene.end(), chairLLegFR.begin(), chairLLegFR.end());
     scene.insert(scene.end(), chairLLegBL.begin(), chairLLegBL.end());
     scene.insert(scene.end(), chairLLegBR.begin(), chairLLegBR.end());
-    
+
     elements += chairLBase.size() + chairLBack.size() + chairLArmL.size() + chairLArmR.size() + chairLLegFL.size() + chairLLegFR.size() + chairLLegBL.size() + chairLLegBR.size();
-    
-    
+
+
     // Couch
     vector<GLfloat> couchBase = to_cartesian_coord(mat_mult(translation_matrix(0.0, -0.5, -4.5), mat_mult(scaling_matrix(8.0, 2.0, 3.0), hCube)));
     vector<GLfloat> couchBack = to_cartesian_coord(mat_mult(translation_matrix(0.0, 0.5, -5.75), mat_mult(rotation_matrix_x(M_PI*3.8/8.0), mat_mult(scaling_matrix(8.0, 0.75, 3.5), hCube))));
@@ -285,264 +285,264 @@ GLfloat* init_scene() {
     vector<GLfloat> couchArmR = to_cartesian_coord(mat_mult(translation_matrix(-3.5, 0.75, -4.5), mat_mult(scaling_matrix(1.0, 1.0, 3.0), hCube)));
     vector<GLfloat> couchPillowL = to_cartesian_coord(mat_mult(translation_matrix(0.85, 0.85, -5.0), mat_mult(rotation_matrix_x(M_PI*3.8/8.0), mat_mult(scaling_matrix(1.5, 0.5, 1.25), hCube))));
     vector<GLfloat> couchPillowR = to_cartesian_coord(mat_mult(translation_matrix(-0.85, 0.85, -5.0), mat_mult(rotation_matrix_x(M_PI*3.8/8.0), mat_mult(scaling_matrix(1.5, 0.5, 1.25), hCube))));
-    
+
     scene.insert(scene.end(), couchBase.begin(), couchBase.end());
     scene.insert(scene.end(), couchBack.begin(), couchBack.end());
     scene.insert(scene.end(), couchArmL.begin(), couchArmL.end());
     scene.insert(scene.end(), couchArmR.begin(), couchArmR.end());
     scene.insert(scene.end(), couchPillowL.begin(), couchPillowL.end());
     scene.insert(scene.end(), couchPillowR.begin(), couchPillowR.end());
-    
+
     elements += couchBase.size() + couchBack.size() + couchArmL.size() + couchArmR.size() + couchPillowL.size() + couchPillowR.size();
-    
+
     return vector2array(scene);
 }
 
 // Construct the color mapping of the scene
 GLfloat* init_color() {
     vector<GLfloat> colors;
-    
+
     // Color Matrics
-    
+
     vector<GLfloat> black = {
-        
+
         0.0,    0.0,    0.0,
         0.0,    0.0,    0.0,
         0.0,    0.0,    0.0,
         0.0,    0.0,    0.0,
-        
+
         0.0,    0.0,    0.0,
         0.0,    0.0,    0.0,
         0.0,    0.0,    0.0,
         0.0,    0.0,    0.0,
-        
+
         0.0,    0.0,    0.0,
         0.0,    0.0,    0.0,
         0.0,    0.0,    0.0,
         0.0,    0.0,    0.0,
-        
+
         0.0,    0.0,    0.0,
         0.0,    0.0,    0.0,
         0.0,    0.0,    0.0,
         0.0,    0.0,    0.0,
-        
+
         0.0,    0.0,    0.0,
         0.0,    0.0,    0.0,
         0.0,    0.0,    0.0,
         0.0,    0.0,    0.0,
-        
+
         0.0,    0.0,    0.0,
         0.0,    0.0,    0.0,
         0.0,    0.0,    0.0,
         0.0,    0.0,    0.0,
-        
+
     };
-    
+
     vector<GLfloat> white = {
-        
+
         1.0,    1.0,    1.0,
         1.0,    1.0,    1.0,
         1.0,    1.0,    1.0,
         1.0,    1.0,    1.0,
-        
+
         1.0,    1.0,    1.0,
         1.0,    1.0,    1.0,
         1.0,    1.0,    1.0,
         1.0,    1.0,    1.0,
-        
+
         1.0,    1.0,    1.0,
         1.0,    1.0,    1.0,
         1.0,    1.0,    1.0,
         1.0,    1.0,    1.0,
-        
+
         1.0,    1.0,    1.0,
         1.0,    1.0,    1.0,
         1.0,    1.0,    1.0,
         1.0,    1.0,    1.0,
-        
+
         1.0,    1.0,    1.0,
         1.0,    1.0,    1.0,
         1.0,    1.0,    1.0,
         1.0,    1.0,    1.0,
-        
+
         1.0,    1.0,    1.0,
         1.0,    1.0,    1.0,
         1.0,    1.0,    1.0,
         1.0,    1.0,    1.0,
-        
+
     };
-    
+
     vector<GLfloat> saddleBrown = {
-        
+
         0.545, 0.271, 0.075,
         0.545, 0.271, 0.075,
         0.545, 0.271, 0.075,
         0.545, 0.271, 0.075,
-        
+
         0.545, 0.271, 0.075,
         0.545, 0.271, 0.075,
         0.545, 0.271, 0.075,
         0.545, 0.271, 0.075,
-        
+
         0.545, 0.271, 0.075,
         0.545, 0.271, 0.075,
         0.545, 0.271, 0.075,
         0.545, 0.271, 0.075,
-        
+
         0.545, 0.271, 0.075,
         0.545, 0.271, 0.075,
         0.545, 0.271, 0.075,
         0.545, 0.271, 0.075,
-        
+
         0.545, 0.271, 0.075,
         0.545, 0.271, 0.075,
         0.545, 0.271, 0.075,
         0.545, 0.271, 0.075,
-        
+
         0.545, 0.271, 0.075,
         0.545, 0.271, 0.075,
         0.545, 0.271, 0.075,
         0.545, 0.271, 0.075,
-        
+
     };
-    
+
     vector<GLfloat> wheat = {
-        
+
         0.961, 0.871, 0.702,
         0.961, 0.871, 0.702,
         0.961, 0.871, 0.702,
         0.961, 0.871, 0.702,
-        
+
         0.961, 0.871, 0.702,
         0.961, 0.871, 0.702,
         0.961, 0.871, 0.702,
         0.961, 0.871, 0.702,
-        
+
         0.961, 0.871, 0.702,
         0.961, 0.871, 0.702,
         0.961, 0.871, 0.702,
         0.961, 0.871, 0.702,
-        
+
         0.961, 0.871, 0.702,
         0.961, 0.871, 0.702,
         0.961, 0.871, 0.702,
         0.961, 0.871, 0.702,
-        
+
         0.961, 0.871, 0.702,
         0.961, 0.871, 0.702,
         0.961, 0.871, 0.702,
         0.961, 0.871, 0.702,
-        
+
         0.961, 0.871, 0.702,
         0.961, 0.871, 0.702,
         0.961, 0.871, 0.702,
         0.961, 0.871, 0.702,
-        
+
     };
-    
+
     vector<GLfloat> lightSteelBlue = {
-        
+
         0.690, 0.769, 0.871,
         0.690, 0.769, 0.871,
         0.690, 0.769, 0.871,
         0.690, 0.769, 0.871,
-        
+
         0.690, 0.769, 0.871,
         0.690, 0.769, 0.871,
         0.690, 0.769, 0.871,
         0.690, 0.769, 0.871,
-        
+
         0.690, 0.769, 0.871,
         0.690, 0.769, 0.871,
         0.690, 0.769, 0.871,
         0.690, 0.769, 0.871,
-        
+
         0.690, 0.769, 0.871,
         0.690, 0.769, 0.871,
         0.690, 0.769, 0.871,
         0.690, 0.769, 0.871,
-        
+
         0.690, 0.769, 0.871,
         0.690, 0.769, 0.871,
         0.690, 0.769, 0.871,
         0.690, 0.769, 0.871,
-        
+
         0.690, 0.769, 0.871,
         0.690, 0.769, 0.871,
         0.690, 0.769, 0.871,
         0.690, 0.769, 0.871,
-        
+
     };
-    
+
     vector<GLfloat> darkSlateGray = {
-        
+
         0.184, 0.310, 0.310,
         0.184, 0.310, 0.310,
         0.184, 0.310, 0.310,
         0.184, 0.310, 0.310,
-        
+
         0.184, 0.310, 0.310,
         0.184, 0.310, 0.310,
         0.184, 0.310, 0.310,
         0.184, 0.310, 0.310,
-        
+
         0.184, 0.310, 0.310,
         0.184, 0.310, 0.310,
         0.184, 0.310, 0.310,
         0.184, 0.310, 0.310,
-        
+
         0.184, 0.310, 0.310,
         0.184, 0.310, 0.310,
         0.184, 0.310, 0.310,
         0.184, 0.310, 0.310,
-        
+
         0.184, 0.310, 0.310,
         0.184, 0.310, 0.310,
         0.184, 0.310, 0.310,
         0.184, 0.310, 0.310,
-        
+
         0.184, 0.310, 0.310,
         0.184, 0.310, 0.310,
         0.184, 0.310, 0.310,
         0.184, 0.310, 0.310,
-        
+
     };
-    
+
     vector<GLfloat> lightGray = {
-        
+
         0.827, 0.827, 0.827,
         0.827, 0.827, 0.827,
         0.827, 0.827, 0.827,
         0.827, 0.827, 0.827,
-        
+
         0.827, 0.827, 0.827,
         0.827, 0.827, 0.827,
         0.827, 0.827, 0.827,
         0.827, 0.827, 0.827,
-        
+
         0.827, 0.827, 0.827,
         0.827, 0.827, 0.827,
         0.827, 0.827, 0.827,
         0.827, 0.827, 0.827,
-        
+
         0.827, 0.827, 0.827,
         0.827, 0.827, 0.827,
         0.827, 0.827, 0.827,
         0.827, 0.827, 0.827,
-        
+
         0.827, 0.827, 0.827,
         0.827, 0.827, 0.827,
         0.827, 0.827, 0.827,
         0.827, 0.827, 0.827,
-        
+
         0.827, 0.827, 0.827,
         0.827, 0.827, 0.827,
         0.827, 0.827, 0.827,
         0.827, 0.827, 0.827,
-        
+
     };
-    
-    
+
+
     // tableTop
     colors.insert(colors.end(), saddleBrown.begin(), saddleBrown.end());
     // tableBase
@@ -603,42 +603,42 @@ GLfloat* init_color() {
     colors.insert(colors.end(), lightGray.begin(), lightGray.end());
 
 
-    
+
     return vector2array(colors);
-    
+
 }
 
 void display_func() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+
     // World model parameters
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    
+
     glRotatef(theta, 0.0, 1.0, 0.0);
     //glRotatef(theta, 1.0, 0.0, 0.0);
-    
+
     GLfloat* vertices = init_scene();
-    
+
     GLfloat* colors = init_color();
-    
+
     glVertexPointer(3,          // 3 components (x, y, z)
                     GL_FLOAT,   // Vertex type is GL_FLOAT
                     0,          // Start position in referenced memory
                     vertices);  // Pointer to memory location to read from
-    
+
     //pass the color pointer
     glColorPointer(3,           // 3 components (r, g, b)
                    GL_FLOAT,    // Vertex type is GL_FLOAT
                    0,           // Start position in referenced memory
                    colors);     // Pointer to memory location to read from
-    
+
     // Draw quad point planes: each 4 vertices
     glDrawArrays(GL_QUADS, 0, elements/3);
-    
+
     glFlush();            //Finish rendering
     glutSwapBuffers();
-    
+
     delete(vertices);
     delete(colors);
 }
@@ -655,21 +655,19 @@ int main (int argc, char **argv) {
     glutInitWindowSize(800, 600);
     // Create a window with rendering context and everything else we need
     glutCreateWindow("Assignment 2");
-    
+
     setup();
     init_camera();
-    
+
     // Set up our display function
     glutDisplayFunc(display_func);
     glutIdleFunc(idle_func);
     // Render our world
     glutMainLoop();
-    
+
     // Remember to call "delete" on your dynmically allocated arrays
     // such that you don't suffer from memory leaks. e.g.
     // delete arr;
-    
+
     return 0;
 }
-
-

@@ -1,11 +1,11 @@
 /***
  Assignment-3: Shading via Lighting and Colors
- 
+
  Name: Scott, John
- 
+
  Collaborators (talked with about high-level concepts): Chu, Teddy
- 
- Project Summary: First I implemented the ObjectModel class into my existing code from Assignment 2. Next I added an Object (Stand) to my scene and added a new color to it. Finally I used the definition of illumination to apply shading to the base colors of my Objects. 
+
+ Project Summary: First I implemented the ObjectModel class into my existing code from Assignment 2. Next I added an Object (Stand) to my scene and added a new color to it. Finally I used the definition of illumination to apply shading to the base colors of my Objects. Ran and compiled in Xcode.
  ***/
 
 
@@ -175,21 +175,21 @@ vector<GLfloat> mat_mult(vector<GLfloat> A, vector<GLfloat> B) {
 // Builds a unit cube centered at the origin
 vector<GLfloat> build_cube() {
     vector<GLfloat> result;
-    
+
     vector<GLfloat> A1 = to_cartesian_coord(mat_mult(translation_matrix(0.0, 0.0, 0.5), to_homogenous_coord(init_plane())));
     vector<GLfloat> A2 = to_cartesian_coord(mat_mult(translation_matrix(0.0, 0.0, -0.5), mat_mult(rotation_matrix_y(M_PI), to_homogenous_coord(init_plane()))));
     vector<GLfloat> A3 = to_cartesian_coord(mat_mult(translation_matrix(0.5, 0.0, 0.0), mat_mult(rotation_matrix_y(M_PI/2.0), to_homogenous_coord(init_plane()))));
     vector<GLfloat> A4 = to_cartesian_coord(mat_mult(translation_matrix(-0.5, 0.0, 0.0), mat_mult(rotation_matrix_y(-M_PI/2.0), to_homogenous_coord(init_plane()))));
     vector<GLfloat> A5 = to_cartesian_coord(mat_mult(translation_matrix(0.0, -0.5, 0.0), mat_mult(rotation_matrix_x(-M_PI/2.0), to_homogenous_coord(init_plane()))));
     vector<GLfloat> A6 = to_cartesian_coord(mat_mult(translation_matrix(0.0, 0.5, 0.0), mat_mult(rotation_matrix_x(M_PI/2.0), to_homogenous_coord(init_plane()))));
-    
+
     result.insert(result.end(), A1.begin(), A1.end());
     result.insert(result.end(), A2.begin(), A2.end());
     result.insert(result.end(), A3.begin(), A3.end());
     result.insert(result.end(), A4.begin(), A4.end());
     result.insert(result.end(), A5.begin(), A5.end());
     result.insert(result.end(), A6.begin(), A6.end());
-    
+
     return result;
 }
 
@@ -239,19 +239,19 @@ vector<GLfloat> sub_vector (vector<GLfloat> A, vector<GLfloat> B) {
 vector<GLfloat> to_unit(vector<GLfloat> n) {
     vector<GLfloat> result;
     GLfloat magnitude = 0.0;
-    
+
     for (int i = 0; i < n.size(); i++) {
         magnitude += pow(n[i], 2);
     }
-    
+
     magnitude = sqrt(magnitude);
-    
+
     for (int i = 0; i < n.size(); i++) {
         result.push_back(n[i]/magnitude);
     }
-    
+
     return result;
-    
+
 }
 
 
@@ -267,7 +267,7 @@ vector<GLfloat> cross_product(vector<GLfloat> A, vector<GLfloat> B) {
 // Generates the normals to each surface (plane)
 vector<GLfloat> generate_normals(vector<GLfloat> points) {
     vector<GLfloat> normals;
-    
+
     vector<GLfloat> q0, q1, q3, a, b, n;
 
     for (int i = 0; i < points.size(); i+=12) {
@@ -284,8 +284,8 @@ vector<GLfloat> generate_normals(vector<GLfloat> points) {
         normals.push_back(n[1]);
         normals.push_back(n[2]);
     }
-    
-    
+
+
     return normals;
 }
 
@@ -320,14 +320,14 @@ vector<GLfloat> color_cube(GLfloat r, GLfloat g, GLfloat b) {
     vector<GLfloat> plane4 = init_base_color(r, g, b);
     vector<GLfloat> plane5 = init_base_color(r, g, b);
     vector<GLfloat> plane6 = init_base_color(r, g, b);
-    
+
     base_color = concat_vector(base_color, plane1);
     base_color = concat_vector(base_color, plane2);
     base_color = concat_vector(base_color, plane3);
     base_color = concat_vector(base_color, plane4);
     base_color = concat_vector(base_color, plane5);
     base_color = concat_vector(base_color, plane6);
-    
+
     return base_color;
 }
 
@@ -348,7 +348,7 @@ vector<GLfloat> init_base_color(GLfloat r0, GLfloat g0, GLfloat b0, GLfloat r1, 
 
 // Performs the dot product between two vectors
 GLfloat dot_product(vector<GLfloat> A, vector<GLfloat> B) {
-    
+
     return (A[0]*B[0] + A[1]*B[1] + A[2]*B[2]);
 }
 
@@ -357,7 +357,7 @@ GLfloat dot_product(vector<GLfloat> A, vector<GLfloat> B) {
 // surface normals, and base color of the surface
 ObjectModel apply_shading(ObjectModel object_model, vector<GLfloat> light_source, vector<GLfloat> camera) {
     vector<GLfloat> colors;
-    
+
     object_model.set_colors(colors);
     return object_model;
 }
@@ -369,19 +369,19 @@ ObjectModel apply_shading(ObjectModel object_model, vector<GLfloat> light_source
                           vector<GLfloat> amb, vector<GLfloat> diff, vector<GLfloat> spec) {
     vector<GLfloat> colors, colorX, colorY, colorZ, points, normals, v, h;
     vector<GLfloat> base_colors = object_model.get_base_colors();
-    
-    
+
+
     for (int i = 0; i < base_colors.size(); i+=3) {
         points = { object_model.get_points()[i], object_model.get_points()[i+1], object_model.get_points()[i+2] };
         normals = { object_model.get_normals()[i], object_model.get_normals()[i+1], object_model.get_normals()[i+2] };
         v = sub_vector(points, camera);
         h = to_unit(add_vector(v, light_source));
-        
+
         colors.push_back(base_colors[i]*(amb[0]+diff[0]*(dot_product(normals, light_source)) + base_colors[i]*spec[0]*dot_product(normals, h)));
         colors.push_back(base_colors[i+1]*(amb[1]+diff[1]*(dot_product(normals, light_source)) + base_colors[i+1]*spec[1]*dot_product(normals, h)));
         colors.push_back(base_colors[i+2]*(amb[2]+diff[2]*(dot_product(normals, light_source)) + base_colors[i+2]*spec[2]*dot_product(normals, h)));
     }
-    
+
     object_model.set_colors(colors);
     return object_model;
 }
@@ -438,14 +438,14 @@ ObjectModel build_table() {
     vector<GLfloat> tableLegFR = to_cartesian_coord(mat_mult(translation_matrix(-2.0, -1.0, 1.0), mat_mult(scaling_matrix(0.1, 1.1, 0.1), to_homogenous_coord(build_cube()))));
     vector<GLfloat> tableLegBL = to_cartesian_coord(mat_mult(translation_matrix(2.0, -1.0, -1.0), mat_mult(scaling_matrix(0.1, 1.1, 0.1), to_homogenous_coord(build_cube()))));
     vector<GLfloat> tableLegBR = to_cartesian_coord(mat_mult(translation_matrix(-2.0, -1.0, -1.0), mat_mult(scaling_matrix(0.1, 1.1, 0.1), to_homogenous_coord(build_cube()))));
-    
+
     result = concat_vector(result, tableTop);
     result = concat_vector(result, tableBase);
     result = concat_vector(result, tableLegFL);
     result = concat_vector(result, tableLegFR);
     result = concat_vector(result, tableLegBL);
     result = concat_vector(result, tableLegBR);
-    
+
     vector<GLfloat> color;
     vector<GLfloat> colorTop = color_cube(0.545, 0.271, 0.075);           // saddleBrown
     vector<GLfloat> colorBase = color_cube(0.0, 0.0, 0.0);                // black
@@ -453,21 +453,21 @@ ObjectModel build_table() {
     vector<GLfloat> colorLegFR = color_cube(0.0, 0.0, 0.0);
     vector<GLfloat> colorLegBL = color_cube(0.0, 0.0, 0.0);
     vector<GLfloat> colorLegBR = color_cube(0.0, 0.0, 0.0);
-    
+
     color = concat_vector(color, colorTop);
     color = concat_vector(color, colorBase);
     color = concat_vector(color, colorLegFL);
     color = concat_vector(color, colorLegFR);
     color = concat_vector(color, colorLegBL);
     color = concat_vector(color, colorLegBR);
-    
+
     ObjectModel table;
-    
+
     table.set_points(result);
     table.set_normals(generate_normals(result));
     table.set_base_colors(color);
     table = apply_shading(table, light_source, camera, amb, diff, spec);
-    
+
     return table;
 }
 
@@ -475,21 +475,21 @@ ObjectModel build_table() {
 ObjectModel build_rug() {
     vector<GLfloat> result;
     vector<GLfloat> rugComplete = to_cartesian_coord(mat_mult(translation_matrix(0.0, -1.5, 0.0), mat_mult(scaling_matrix(15.0, 0.1, 15.0), to_homogenous_coord(build_cube()))));
-    
+
     result = concat_vector(result, rugComplete);
-    
+
     vector<GLfloat> color;
     vector<GLfloat> colorComplete = color_cube(0.184, 0.310, 0.310);         // darkSlateGray
-    
+
     color = concat_vector(color, colorComplete);
-    
+
     ObjectModel rug;
-    
+
     rug.set_points(result);
     rug.set_normals(generate_normals(result));
     rug.set_base_colors(color);
     rug = apply_shading(rug, light_source, camera, amb, diff, spec);
-    
+
     return rug;
 }
 
@@ -504,7 +504,7 @@ ObjectModel build_chairR() {
     vector<GLfloat> chairRLegFR = to_cartesian_coord(mat_mult(translation_matrix(4.5, -1.0, -1.25), mat_mult(scaling_matrix(0.2, 1.0, 0.2), to_homogenous_coord(build_cube()))));
     vector<GLfloat> chairRLegBL = to_cartesian_coord(mat_mult(translation_matrix(7.25, -1.0, 1.25), mat_mult(scaling_matrix(0.2, 1.0, 0.2), to_homogenous_coord(build_cube()))));
     vector<GLfloat> chairRLegBR = to_cartesian_coord(mat_mult(translation_matrix(7.25, -1.0, -1.25), mat_mult(scaling_matrix(0.2, 1.0, 0.2), to_homogenous_coord(build_cube()))));
-    
+
     result = concat_vector(result, chairRBase);
     result = concat_vector(result, chairRBack);
     result = concat_vector(result, chairRArmL);
@@ -513,7 +513,7 @@ ObjectModel build_chairR() {
     result = concat_vector(result, chairRLegFR);
     result = concat_vector(result, chairRLegBL);
     result = concat_vector(result, chairRLegBR);
-    
+
     vector<GLfloat> color;
     vector<GLfloat> colorBase = color_cube(0.690, 0.769, 0.871);            // lightSteelBlue
     vector<GLfloat> colorBack = color_cube(0.690, 0.769, 0.871);
@@ -523,7 +523,7 @@ ObjectModel build_chairR() {
     vector<GLfloat> colorLegFR = color_cube(0.961, 0.871, 0.702);
     vector<GLfloat> colorLegBL = color_cube(0.961, 0.871, 0.702);
     vector<GLfloat> colorLegBR = color_cube(0.961, 0.871, 0.702);
-    
+
     color = concat_vector(color, colorBase);
     color = concat_vector(color, colorBack);
     color = concat_vector(color, colorArmL);
@@ -532,14 +532,14 @@ ObjectModel build_chairR() {
     color = concat_vector(color, colorLegFR);
     color = concat_vector(color, colorLegBL);
     color = concat_vector(color, colorLegBR);
-    
+
     ObjectModel chairR;
-    
+
     chairR.set_points(result);
     chairR.set_normals(generate_normals(result));
     chairR.set_base_colors(color);
     chairR = apply_shading(chairR, light_source, camera, amb, diff, spec);
-    
+
     return chairR;
 }
 
@@ -554,7 +554,7 @@ ObjectModel build_chairL() {
     vector<GLfloat> chairLLegFR = to_cartesian_coord(mat_mult(translation_matrix(-4.5, -1.0, -1.25), mat_mult(scaling_matrix(0.2, 1.0, 0.2), to_homogenous_coord(build_cube()))));
     vector<GLfloat> chairLLegBL = to_cartesian_coord(mat_mult(translation_matrix(-7.25, -1.0, 1.25), mat_mult(scaling_matrix(0.2, 1.0, 0.2), to_homogenous_coord(build_cube()))));
     vector<GLfloat> chairLLegBR = to_cartesian_coord(mat_mult(translation_matrix(-7.25, -1.0, -1.25), mat_mult(scaling_matrix(0.2, 1.0, 0.2), to_homogenous_coord(build_cube()))));
-    
+
     result = concat_vector(result, chairLBase);
     result = concat_vector(result, chairLBack);
     result = concat_vector(result, chairLArmL);
@@ -563,7 +563,7 @@ ObjectModel build_chairL() {
     result = concat_vector(result, chairLLegFR);
     result = concat_vector(result, chairLLegBL);
     result = concat_vector(result, chairLLegBR);
-    
+
     vector<GLfloat> color;
     vector<GLfloat> colorBase = color_cube(0.690, 0.769, 0.871);            // lightSteelBlue
     vector<GLfloat> colorBack = color_cube(0.690, 0.769, 0.871);
@@ -573,7 +573,7 @@ ObjectModel build_chairL() {
     vector<GLfloat> colorLegFR = color_cube(0.961, 0.871, 0.702);
     vector<GLfloat> colorLegBL = color_cube(0.961, 0.871, 0.702);
     vector<GLfloat> colorLegBR = color_cube(0.961, 0.871, 0.702);
-    
+
     color = concat_vector(color, colorBase);
     color = concat_vector(color, colorBack);
     color = concat_vector(color, colorArmL);
@@ -582,14 +582,14 @@ ObjectModel build_chairL() {
     color = concat_vector(color, colorLegFR);
     color = concat_vector(color, colorLegBL);
     color = concat_vector(color, colorLegBR);
-    
+
     ObjectModel chairL;
-    
+
     chairL.set_points(result);
     chairL.set_normals(generate_normals(result));
     chairL.set_base_colors(color);
     chairL = apply_shading(chairL, light_source, camera, amb, diff, spec);
-    
+
     return chairL;
 }
 
@@ -602,14 +602,14 @@ ObjectModel build_couch() {
     vector<GLfloat> couchArmR = to_cartesian_coord(mat_mult(translation_matrix(-3.5, 0.75, -4.5), mat_mult(scaling_matrix(1.0, 1.0, 3.0), to_homogenous_coord(build_cube()))));
     vector<GLfloat> couchPillowL = to_cartesian_coord(mat_mult(translation_matrix(0.85, 0.85, -5.0), mat_mult(rotation_matrix_x(M_PI*3.8/8.0), mat_mult(scaling_matrix(1.5, 0.5, 1.25), to_homogenous_coord(build_cube())))));
     vector<GLfloat> couchPillowR = to_cartesian_coord(mat_mult(translation_matrix(-0.85, 0.85, -5.0), mat_mult(rotation_matrix_x(M_PI*3.8/8.0), mat_mult(scaling_matrix(1.5, 0.5, 1.25), to_homogenous_coord(build_cube())))));
-    
+
     result = concat_vector(result, couchBase);
     result = concat_vector(result, couchBack);
     result = concat_vector(result, couchArmL);
     result = concat_vector(result, couchArmR);
     result = concat_vector(result, couchPillowL);
     result = concat_vector(result, couchPillowR);
-    
+
     vector<GLfloat> color;
     vector<GLfloat> colorBase = color_cube(1.0, 1.0, 1.0);           // white
     vector<GLfloat> colorBack = color_cube(1.0, 1.0, 1.0);
@@ -617,21 +617,21 @@ ObjectModel build_couch() {
     vector<GLfloat> colorArmR = color_cube(1.0, 1.0, 1.0);
     vector<GLfloat> colorPillowL = color_cube(0.827, 0.827, 0.827); // lightGray
     vector<GLfloat> colorPillowR = color_cube(0.827, 0.827, 0.827);
-    
+
     color = concat_vector(color, colorBase);
     color = concat_vector(color, colorBack);
     color = concat_vector(color, colorArmL);
     color = concat_vector(color, colorArmR);
     color = concat_vector(color, colorPillowL);
     color = concat_vector(color, colorPillowR);
-    
+
     ObjectModel couch;
-    
+
     couch.set_points(result);
     couch.set_normals(generate_normals(result));
     couch.set_base_colors(color);
     couch = apply_shading(couch, light_source, camera, amb, diff, spec);
-    
+
     return couch;
 }
 
@@ -643,34 +643,34 @@ ObjectModel build_stand() {
     vector<GLfloat> standLegFR = to_cartesian_coord(mat_mult(translation_matrix(-4.75, -0.15, -3.75), mat_mult(rotation_matrix_z(M_PI*0.4/8.0), mat_mult(scaling_matrix(0.2, 2.75, 0.2), to_homogenous_coord(build_cube())))));
     vector<GLfloat> standLegBL = to_cartesian_coord(mat_mult(translation_matrix(-5.75, -0.15, -5.25), mat_mult(rotation_matrix_z(M_PI*(-0.4)/8.0), mat_mult(scaling_matrix(0.2, 2.75, 0.2), to_homogenous_coord(build_cube())))));
     vector<GLfloat> standLegBR = to_cartesian_coord(mat_mult(translation_matrix(-4.75, -0.15, -5.25), mat_mult(rotation_matrix_z(M_PI*0.4/8.0), mat_mult(scaling_matrix(0.2, 2.75, 0.2), to_homogenous_coord(build_cube())))));
-    
+
     result = concat_vector(result, standTop);
     result = concat_vector(result, standLegFL);
     result = concat_vector(result, standLegFR);
     result = concat_vector(result, standLegBL);
     result = concat_vector(result, standLegBR);
-    
+
     vector<GLfloat> color;
     vector<GLfloat> colorTop = color_cube(0.871, 0.722, 0.529);           // burlyWood
     vector<GLfloat> colorLegFL = color_cube(0.871, 0.722, 0.529);
     vector<GLfloat> colorLegFR = color_cube(0.871, 0.722, 0.529);
     vector<GLfloat> colorLegBL = color_cube(0.871, 0.722, 0.529);
     vector<GLfloat> colorLegBR = color_cube(0.871, 0.722, 0.529);
-    
+
     color = concat_vector(color, colorTop);
     color = concat_vector(color, colorLegFL);
     color = concat_vector(color, colorLegFR);
     color = concat_vector(color, colorLegBL);
     color = concat_vector(color, colorLegBR);
-    
+
     ObjectModel stand;
-    
+
     stand.set_points(result);
     stand.set_normals(generate_normals(result));
     stand.set_base_colors(color);
     stand = apply_shading(stand, light_source, camera, amb, diff, spec);
 
-    
+
     return stand;
 }
 
@@ -678,14 +678,14 @@ ObjectModel build_stand() {
 // Construct the scene using objects built from cubes/prisms
 GLfloat* init_scene() {
     vector<GLfloat> scene;
-    
+
     scene = concat_vector(scene, build_table().get_points());
     scene = concat_vector(scene, build_rug().get_points());
     scene = concat_vector(scene, build_chairR().get_points());
     scene = concat_vector(scene, build_chairL().get_points());
     scene = concat_vector(scene, build_couch().get_points());
     scene = concat_vector(scene, build_stand().get_points());
-    
+
     return vector2array(scene);
 }
 
@@ -693,48 +693,48 @@ GLfloat* init_scene() {
 // Construct the color mapping of the scene
 GLfloat* init_color() {
     vector<GLfloat> colors;
-    
+
     colors = concat_vector(colors, build_table().get_colors());
     colors = concat_vector(colors, build_rug().get_colors());
     colors = concat_vector(colors, build_chairR().get_colors());
     colors = concat_vector(colors, build_chairL().get_colors());
     colors = concat_vector(colors, build_couch().get_colors());
     colors = concat_vector(colors, build_stand().get_colors());
-    
-    
+
+
     return vector2array(colors);
 }
 
 void display_func() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+
     // World model parameters
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    
+
     glRotatef(theta, 0.0, 1.0, 0.0);
     // glRotatef(theta, 1.0, 0.0, 0.0);
-    
+
     GLfloat* vertices = init_scene();
     GLfloat* colors = init_color();
-    
+
     glVertexPointer(3,          // 3 components (x, y, z)
                     GL_FLOAT,   // Vertex type is GL_FLOAT
                     0,          // Start position in referenced memory
                     vertices);  // Pointer to memory location to read from
-    
+
     //pass the color pointer
     glColorPointer(3,           // 3 components (r, g, b)
                    GL_FLOAT,    // Vertex type is GL_FLOAT
                    0,           // Start position in referenced memory
                    colors);     // Pointer to memory location to read from
-    
+
     // Draw quad point planes: each 4 vertices
     glDrawArrays(GL_QUADS, 0, elements/3);
-    
+
     glFlush();            //Finish rendering
     glutSwapBuffers();
-    
+
     delete(vertices);
     delete(colors);
 }
@@ -751,19 +751,19 @@ int main (int argc, char **argv) {
     glutInitWindowSize(800, 600);
     // Create a window with rendering context and everything else we need
     glutCreateWindow("Assignment 3");
-    
+
     setup();
     init_camera();
-    
+
     // Set up our display function
     glutDisplayFunc(display_func);
     glutIdleFunc(idle_func);
     // Render our world
     glutMainLoop();
-    
+
     // Remember to call "delete" on your dynmically allocated arrays
     // such that you don't suffer from memory leaks. e.g.
     // delete arr;
-    
+
     return 0;
 }
